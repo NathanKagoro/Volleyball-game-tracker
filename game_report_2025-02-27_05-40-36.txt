@@ -1,0 +1,59 @@
+Game Report
+Final Score - Us: 25, Opponent: 11
+---- Contribution Breakdown ----
+
+Player 1 Contribution:
+  - Ace - 1: 2 times
+  - Communication - 1: 1 times
+  - Block - 1: 3 times
+
+Player 2 Contribution:
+  - Passing Error - 2: 3 times
+  - Block - 2: 2 times
+  - Ace - 2: 5 times
+
+Player 3 Contribution:
+  - Communication - 3: 5 times
+  - Ace - 3: 1 times
+  - Block - 3: 1 times
+
+Player 4 Contribution:
+  - Communication - 4: 2 times
+  - Passing Error - 4: 5 times
+  - Serving Error - 4: 1 times
+
+Player 5 Contribution:
+  - Serving Error - 5: 2 times
+
+Player 6 Contribution:
+  - Court Coverage - 6: 1 times
+  - Tip - 6: 1 times
+  - Kill - 6: 1 times
+
+Player 1 Contribution:
+  - Ace - 1: 2 times
+  - Communication - 1: 1 times
+  - Block - 1: 3 times
+
+Player 2 Contribution:
+  - Passing Error - 2: 3 times
+  - Block - 2: 2 times
+  - Ace - 2: 5 times
+
+Player 3 Contribution:
+  - Communication - 3: 5 times
+  - Ace - 3: 1 times
+  - Block - 3: 1 times
+
+Player 4 Contribution:
+  - Communication - 4: 2 times
+  - Passing Error - 4: 5 times
+  - Serving Error - 4: 1 times
+
+Player 5 Contribution:
+  - Serving Error - 5: 2 times
+
+Player 6 Contribution:
+  - Court Coverage - 6: 1 times
+  - Tip - 6: 1 times
+  - Kill - 6: 1 times
