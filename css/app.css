@@ -113,12 +113,11 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
   grid-template-areas: 'board' 'plates' 'court' 'controls';
   gap: 6px;
   padding: 8px max(12px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-bottom));
-  height: calc(100dvh - var(--topbar));
   max-width: 1180px;
   width: 100%;
   margin: 0 auto;
 }
-.is-sample .view-court { height: calc(100dvh - var(--topbar) - 40px); }
+body[data-view='court'] { height: 100vh; height: 100dvh; }
 
 /* ---------------------------------------------------------------- scoreboard */
 .board {
@@ -332,7 +331,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
 
 .half-head { display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; }
 .half-home .half-head { order: 2; margin-top: auto; }
-.half-call { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-light); }
+.half-call { padding: 0 4px; background: var(--court); font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-light); }
 .half-name {
   padding: 1px 8px;
   font-family: var(--display);
@@ -484,7 +483,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
 @media (min-aspect-ratio: 5/4) {
   .court { flex-direction: row; }
   .half-home { order: 1; }
-  .net { order: 2; flex: 0 0 12px; margin: -26px 0; border-top: 0; border-left: 3px solid var(--tape); background: repeating-linear-gradient(0deg, rgba(255,255,255,.35) 0 1px, transparent 1px 5px), #15171a; }
+  .net { order: 2; flex: 0 0 12px; margin: -18px 0; border-top: 0; border-left: 3px solid var(--tape); background: repeating-linear-gradient(0deg, rgba(255,255,255,.35) 0 1px, transparent 1px 5px), #15171a; }
   .net::before, .net::after { left: -8px; width: 22px; height: 9px; }
   .net::before { top: 0; }
   .net::after { top: auto; bottom: 0; }
@@ -500,7 +499,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
   .spots { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
   .half-home .spots { grid-template-areas: 'p5 p4' 'p6 p3' 'p1 p2'; }
   .half-away .spots { grid-template-areas: 'p2 p1' 'p3 p6' 'p4 p5'; }
-  .court { margin: 14px 26px 4px; }
+  .court { margin: 20px 26px 20px; }
 }
 
 /* phone on its side: scoreboard and controls on the left, court on the right */
@@ -511,9 +510,9 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
     grid-template-areas: 'board court' 'plates court' 'controls court';
     height: calc(100dvh - var(--topbar));
   }
-  .is-sample .view-court { height: calc(100dvh - var(--topbar) - 40px); }
+  body[data-view='court'] { height: 100vh; height: 100dvh; }
   .flip { --h: 60px; }
-  .court { margin: 14px 22px 10px; }
+  .court { margin: 20px 22px 20px; }
   .keys-hint { display: none; }
 }
 

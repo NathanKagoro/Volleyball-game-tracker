@@ -9,5 +9,8 @@
     "start": "node tools/serve.mjs . 4390",
     "build": "node tools/build.mjs",
     "screenshots": "node tools/screenshots.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1"
   }
 }

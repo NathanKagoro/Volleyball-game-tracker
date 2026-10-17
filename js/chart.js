@@ -59,14 +59,14 @@ export function momentumSvg(match, state, { width = 360, stacked = width < 640, 
   const peak = Math.max(5, ...state.rallies.map((r) => Math.abs(r.net)));
   const yMax = Math.ceil(peak / 5) * 5;
   const pad = { l: 34, r: 12, t: 28, b: 22 };
-  const headH = title ? 64 : 8;
+  const headH = title ? (width < 520 ? 104 : 84) : 8;
   const panelH = stacked ? 150 : 210;
   const gap = stacked ? 14 : 0;
   const cols = stacked ? 1 : sets.length;
   const rows = stacked ? sets.length : 1;
   const totalRallies = sets.reduce((s, x) => s + Math.max(x.rallies.length, 10), 0);
   const plotW = width - pad.l - pad.r;
-  const height = headH + rows * panelH + (rows - 1) * gap + 34;
+  const height = headH + rows * panelH + (rows - 1) * gap + (width < 520 ? 44 : 34);
 
   const parts = [];
   parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" font-family="${esc(CHART.font)}" role="img" aria-labelledby="mtitle mdesc">`);
@@ -85,13 +85,16 @@ export function momentumSvg(match, state, { width = 360, stacked = width < 640, 
       parts.push(`<text x="${lx + 17}" y="${ly + 2}" fill="${CHART.ink}" font-size="14" font-weight="700">${esc(teams[t].name)}</text>`);
       lx += 26 + teams[t].name.length * 7.5;
     }
-    const shapes = [['filled', 'earned'], ['ring', 'their error'], ['square', 'no detail']];
+    const shapes = [['filled', 'earned point'], ['ring', 'opponent error'], ['square', 'no detail']];
+    const row2 = width < 520;
+    let sx0 = row2 ? pad.l - 22 : lx;
+    const sy0 = row2 ? ly + 20 : ly;
     for (const [shape, label] of shapes) {
-      if (lx + 80 > width && width < 520) break;
-      parts.push(marker(shape, lx + 5, ly - 3, CHART.muted));
-      parts.push(`<text x="${lx + 14}" y="${ly + 2}" fill="${CHART.muted}" font-size="13" font-weight="600">${label}</text>`);
-      lx += 20 + label.length * 6.4;
+      parts.push(marker(shape, sx0 + 5, sy0 - 3, CHART.muted));
+      parts.push(`<text x="${sx0 + 14}" y="${sy0 + 2}" fill="${CHART.muted}" font-size="13" font-weight="600">${label}</text>`);
+      sx0 += 24 + label.length * 6.2;
     }
+    parts.push(`<text x="${pad.l - 22}" y="${sy0 + 20}" fill="${CHART.muted}" font-size="13" font-weight="600">Above the line ${esc(teams.home.name)} lead, below it ${esc(teams.away.name)} lead.</text>`);
   }
 
   sets.forEach((set, k) => {
@@ -119,18 +122,13 @@ export function momentumSvg(match, state, { width = 360, stacked = width < 640, 
       parts.push(`<line x1="${r1(x0)}" x2="${r1(x0 + w)}" y1="${y}" y2="${y}" stroke="${v === 0 ? CHART.zero : CHART.grid}" stroke-width="${v === 0 ? 1.5 : 1}"${v === 0 ? '' : ' stroke-dasharray="2 3"'}/>`);
       if (col === 0) parts.push(`<text x="${pad.l - 6}" y="${y + 4}" fill="${CHART.muted}" font-size="12" text-anchor="end" font-weight="600">${minus(v)}</text>`);
     }
-    if (col === 0) {
-      parts.push(`<text x="${r1(x0 + w - 6)}" y="${r1(top + 10)}" fill="${CHART.muted}" font-size="12" text-anchor="end" font-weight="600">${esc(teams.home.name)} ahead</text>`);
-      parts.push(`<text x="${r1(x0 + w - 6)}" y="${r1(top + h - 2)}" fill="${CHART.muted}" font-size="12" text-anchor="end" font-weight="600">${esc(teams.away.name)} ahead</text>`);
-    }
-
     // runs of three or more
     const step = (w - 12) / n;
     for (const run of runsOf(set.rallies)) {
       const a = sx(run.from + 0.5);
       const b = sx(run.to + 1.5);
       parts.push(`<rect x="${r1(a)}" y="${top}" width="${r1(Math.max(b - a, 2))}" height="${r1(h)}" fill="${CHART[run.team]}" fill-opacity="0.16"/>`);
-      if (run.length >= 4) parts.push(`<text x="${r1((a + b) / 2)}" y="${top - 3}" fill="${CHART[run.team]}" font-size="12" font-weight="800" text-anchor="middle">${run.length}</text>`);
+      if (run.length >= 4) parts.push(`<text x="${r1((a + b) / 2)}" y="${r1(top + 11)}" fill="${CHART[run.team]}" font-size="12" font-weight="800" text-anchor="middle">${run.length}</text>`);
     }
 
     // x ticks
@@ -151,7 +149,11 @@ export function momentumSvg(match, state, { width = 360, stacked = width < 640, 
   });
 
   const fy = height - 12;
-  parts.push(`<text x="${pad.l - 22}" y="${fy}" fill="${CHART.muted}" font-size="12" font-weight="600">Rally number in the set. Shaded: runs of 3 or more, longer runs numbered.</text>`);
+  const foot = 'Across: rally number in the set. Shaded: runs of 3 or more points, numbered from 4.';
+  if (width < 520) {
+    parts.push(`<text x="${pad.l - 22}" y="${fy - 14}" fill="${CHART.muted}" font-size="12" font-weight="600">Across: rally number in the set.</text>`);
+    parts.push(`<text x="${pad.l - 22}" y="${fy + 2}" fill="${CHART.muted}" font-size="12" font-weight="600">Shaded: runs of 3 or more, numbered from 4.</text>`);
+  } else parts.push(`<text x="${pad.l - 22}" y="${fy}" fill="${CHART.muted}" font-size="12" font-weight="600">${foot}</text>`);
   parts.push('</svg>');
   return { svg: parts.join(''), width, height };
 }

@@ -182,7 +182,7 @@ function renderStats() {
   table.append(el('caption', { class: 'sr-only' }, 'Every rally in order, with the score after it'));
   const head = el('tr');
   for (const h of ['Set', 'Rally', 'Won by', 'How', 'Player', 'Score', 'Lead']) head.append(el('th', { scope: 'col' }, h));
-  table.append(el('thead')).append(head);
+  const thead = el('thead'); thead.append(head); table.append(thead);
   const body = el('tbody');
   for (const r of state.rallies) {
     const tr = el('tr', { class: `row-${r.winner}` });
@@ -237,7 +237,7 @@ function renderStats() {
     hr.append(el('th', { scope: 'col', class: 'sticky' }, 'Player'));
     for (const h of cols) hr.append(el('th', { scope: 'col', title: HOWS[h].label, class: HOWS[h].kind === 'error' ? 'err' : '' }, HOWS[h].short));
     for (const h of ['Pts', 'Err', 'Net', 'Serves']) hr.append(el('th', { scope: 'col', class: 'sum' }, h));
-    tbl.append(el('thead')).append(hr);
+    const th0 = el('thead'); th0.append(hr); tbl.append(th0);
     const tbody = el('tbody');
     for (const p of match.config.teams[t].players) {
       const r = state.players[`${t}:${p.number}`];
