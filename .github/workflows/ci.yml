@@ -18,6 +18,10 @@ jobs:
         run: npm test
       - name: Build
         run: node tools/build.mjs
+      - name: Drive a scoring session in headless Chrome
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node tools/flow.mjs
       - name: Screenshots at 1440, 390 and 360 px (fails on console errors, 4xx or a scrolling live screen)
         env:
           CHROME_PATH: /usr/bin/google-chrome
