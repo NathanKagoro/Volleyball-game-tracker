@@ -142,7 +142,6 @@ function render() {
     half.disabled = state.complete;
     half.setAttribute('aria-label', `Point ${teamName(t)}${s.serving === t ? ', serving' : ''}`);
     document.querySelectorAll(`.kh-${t}`).forEach((n) => { n.textContent = teamName(t); });
-    $(`fs-${t}`).textContent = teamName(t);
   }
   $('board-set').textContent = state.complete ? 'Final' : `Set ${s.index + 1}`;
   const p = pressure(match, state);
@@ -509,6 +508,8 @@ function fillSetup() {
   $('home-roster').value = src ? formatRoster(src.teams.home.players) : '';
   $('away-roster').value = src ? formatRoster(src.teams.away.players) : '';
   document.querySelector(`input[name=bestOf][value="${src ? src.bestOf : 3}"]`).checked = true;
+  document.querySelector(`input[name=firstServe][value="${src ? src.firstServe : 'home'}"]`).checked = true;
+  for (const t of TEAMS) $(`fs-${t}`).textContent = $(`${t}-name`).value.trim() || (t === 'home' ? 'Home side' : 'Away side');
   $('pref-buzz').checked = prefs.buzz;
   for (const id of ['home-roster-err', 'away-roster-err', 'setup-err']) $(id).textContent = '';
 }
