@@ -83,6 +83,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
 .home-link:hover { color: var(--home); }
 .tabs { display: flex; }
 .tabs a { padding: 0 10px; text-transform: uppercase; font-weight: 900; font-size: 19px; border-bottom: 4px solid transparent; padding-top: 4px; }
+@media (max-width: 380px) { .home-link { font-size: 16px; } .tabs a { padding: 4px 6px 0; font-size: 18px; } }
 .tabs a[aria-current='page'] { color: var(--home); border-bottom-color: var(--home); }
 .tabs a:hover { color: var(--home); }
 
@@ -93,7 +94,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
   align-items: center;
   justify-content: center;
   gap: 0 12px;
-  padding: 3px 12px;
+  padding: 0 12px;
   background: var(--tape);
   color: #000;
   font-size: 14px;
@@ -101,7 +102,7 @@ kbd { font-family: var(--display); font-weight: 700; font-size: 0.9em; padding: 
   text-align: center;
   border-bottom: 2px solid #000;
 }
-.sample-strip a { color: #000; font-weight: 800; min-height: 32px; display: inline-flex; align-items: center; padding: 0 4px; }
+.sample-strip a { color: #000; font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; }
 
 /* ---------------------------------------------------------------- court view layout */
 .view-court {
@@ -516,6 +517,7 @@ body[data-view='court'] { height: 100vh; height: 100dvh; }
   .keys-hint { display: none; }
 }
 
+@media (min-width: 900px) { .board { max-width: 760px; width: 100%; justify-self: center; } }
 @media (min-width: 900px) and (min-height: 700px) {
   .flip { --h: 104px; }
   .board { padding: 12px 24px 10px; max-width: 760px; width: 100%; justify-self: center; }
@@ -668,7 +670,7 @@ th { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(
 .players-table .sticky { position: sticky; left: 0; background: var(--housing); text-align: left; z-index: 1; }
 .players-table tbody th { font-family: var(--body); font-weight: 600; font-size: 14px; color: var(--ink-light); }
 .players-table th.err { color: #ffb4ad; }
-.players-table td.zero { color: #6f7781; }
+.players-table td.zero { color: #8a929c; }
 .players-table .sum { font-weight: 700; }
 .players-table th.sum { color: var(--ink-light); }
 .players-table .neg { color: #ffb4ad; }

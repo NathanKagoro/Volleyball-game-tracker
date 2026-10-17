@@ -235,8 +235,9 @@ function renderStats() {
     tbl.append(el('caption', {}, teamName(t)));
     const hr = el('tr');
     hr.append(el('th', { scope: 'col', class: 'sticky' }, 'Player'));
+    for (const h of ['Pts', 'Err', 'Net']) hr.append(el('th', { scope: 'col', class: 'sum' }, h));
     for (const h of cols) hr.append(el('th', { scope: 'col', title: HOWS[h].label, class: HOWS[h].kind === 'error' ? 'err' : '' }, HOWS[h].short));
-    for (const h of ['Pts', 'Err', 'Net', 'Serves']) hr.append(el('th', { scope: 'col', class: 'sum' }, h));
+    hr.append(el('th', { scope: 'col', class: 'sum' }, 'Serves'));
     const th0 = el('thead'); th0.append(hr); tbl.append(th0);
     const tbody = el('tbody');
     for (const p of match.config.teams[t].players) {
@@ -245,11 +246,12 @@ function renderStats() {
       const th = el('th', { scope: 'row', class: 'sticky' });
       th.append(el('span', { class: 'shirt' }, p.number), document.createTextNode(p.name ? ` ${p.name}` : ''));
       tr.append(th);
+      tr.append(el('td', { class: 'sum' }, String(r.points)), el('td', { class: 'sum' }, String(r.errorCount)), el('td', { class: `sum net${r.net < 0 ? ' neg' : ''}` }, signed(r.net)));
       for (const h of cols) {
         const v = r.earned[h] ?? r.errors[h];
         tr.append(el('td', { class: v ? '' : 'zero' }, v ? String(v) : '.'));
       }
-      tr.append(el('td', { class: 'sum' }, String(r.points)), el('td', { class: 'sum' }, String(r.errorCount)), el('td', { class: `sum net${r.net < 0 ? ' neg' : ''}` }, signed(r.net)), el('td', { class: 'sum' }, String(r.serves)));
+      tr.append(el('td', { class: 'sum' }, String(r.serves)));
       tbody.append(tr);
     }
     tbl.append(tbody);
