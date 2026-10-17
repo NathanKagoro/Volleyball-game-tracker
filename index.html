@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Volleyball game tracker</title>
+<meta name="description" content="Courtside volleyball scorer for one-handed use on a phone: tap the half that won the rally, log how it ended, and get a momentum chart and a match report.">
+<meta name="theme-color" content="#0D0F12">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/big-shoulders-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dseg7-classic-bold.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Volleyball game tracker">
+<meta property="og:description" content="Tap the half that won the rally. Score, rotation, runs, momentum chart and match report, on a phone at the side of the court.">
+<meta property="og:url" content="https://nathankagoro.github.io/Volleyball-game-tracker/">
+<meta property="og:image" content="https://nathankagoro.github.io/Volleyball-game-tracker/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Volleyball game tracker">
+<meta name="twitter:description" content="Courtside volleyball scorer: score, rotation, runs, momentum chart and match report.">
+<meta name="twitter:image" content="https://nathankagoro.github.io/Volleyball-game-tracker/assets/og.png">
+<link rel="stylesheet" href="css/app.css">
+<script type="module" src="js/app.js"></script>
+</head>
+<body data-view="court">
+<header class="topbar">
+  <a class="home-link" href="https://nathankagoro.com">&larr; nathankagoro.com</a>
+  <nav class="tabs" aria-label="Screens">
+    <a href="#court" data-tab="court">Court</a>
+    <a href="#stats" data-tab="stats">Stats</a>
+    <a href="#setup" data-tab="setup">Setup</a>
+  </nav>
+</header>
+
+<p class="sample-strip" id="sample-strip" hidden>
+  <span>Sample match. The teams, players and rallies are made up.</span>
+  <a href="#setup">Start your own</a>
+</p>
+
+<main>
+  <!-- ============================================================ COURT -->
+  <section class="view view-court" id="view-court" aria-labelledby="court-h">
+    <h1 class="sr-only" id="court-h">Live scoring</h1>
+
+    <div class="board" id="board">
+      <div class="board-side board-home">
+        <span class="board-name" id="name-home">Home</span>
+        <span class="flip flip-home" id="flip-home" aria-hidden="true"></span>
+        <span class="board-run" id="run-home"></span>
+      </div>
+      <div class="board-mid">
+        <span class="board-set" id="board-set">Set 1</span>
+        <span class="board-sets" aria-hidden="true"><span class="led" id="sets-home">0</span><span class="board-sets-sep"></span><span class="led" id="sets-away">0</span></span>
+        <span class="board-alert" id="board-alert"></span>
+      </div>
+      <div class="board-side board-away">
+        <span class="board-name" id="name-away">Away</span>
+        <span class="flip flip-away" id="flip-away" aria-hidden="true"></span>
+        <span class="board-run" id="run-away"></span>
+      </div>
+      <p class="sr-only" id="board-text" aria-live="polite"></p>
+    </div>
+
+    <ol class="plates" id="plates" aria-label="Set scores"></ol>
+
+    <div class="court" id="court">
+      <button type="button" class="half half-away" id="half-away" data-team="away" aria-describedby="key-away">
+        <span class="half-head"><span class="half-name" id="half-name-away">Away</span><span class="half-call">Point</span></span>
+        <span class="spots" id="spots-away"></span>
+        <kbd class="half-key" id="key-away" aria-label="Keyboard: O">O</kbd>
+      </button>
+      <div class="net" aria-hidden="true"><span></span></div>
+      <button type="button" class="half half-home" id="half-home" data-team="home" aria-describedby="key-home">
+        <span class="half-head"><span class="half-name" id="half-name-home">Home</span><span class="half-call">Point</span></span>
+        <span class="spots" id="spots-home"></span>
+        <kbd class="half-key" id="key-home" aria-label="Keyboard: U">U</kbd>
+      </button>
+      <div class="court-banner" id="court-banner" hidden></div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="ctl ctl-undo" id="undo"><span>Undo</span><kbd>Z</kbd></button>
+      <button type="button" class="ctl" id="open-subs">Sub</button>
+      <button type="button" class="ctl ctl-serve" id="swap-serve" hidden>Swap serve</button>
+      <p class="keys-hint" id="keys-hint">Keys: <kbd>U</kbd> or <kbd>&larr;</kbd> point <span class="kh-home">home</span>, <kbd>O</kbd> or <kbd>&rarr;</kbd> point <span class="kh-away">away</span>, <kbd>Z</kbd> undo</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ STATS -->
+  <section class="view view-stats" id="view-stats" aria-labelledby="stats-h" hidden>
+    <div class="panel stats-head">
+      <h1 id="stats-h">Match report</h1>
+      <p class="stats-status" id="stats-status"></p>
+      <ol class="plates plates-static" id="stats-plates" aria-label="Set scores"></ol>
+    </div>
+
+    <div class="panel chart-panel">
+      <h2 class="sr-only">Momentum</h2>
+      <div class="chart" id="chart"></div>
+      <details class="rally-table">
+        <summary>Rally by rally table</summary>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Rally by rally table">
+          <table id="rally-table"></table>
+        </div>
+      </details>
+    </div>
+
+    <div class="panel">
+      <h2>How points were won</h2>
+      <div class="teams-break" id="teams-break"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Players</h2>
+      <p class="note">Points are aces, kills, blocks and tips. Errors are charged to the player on the team that lost the rally. Net is points minus errors.</p>
+      <div id="players"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Export</h2>
+      <div class="export">
+        <button type="button" class="btn" id="share-report">Share report</button>
+        <button type="button" class="btn" id="copy-report">Copy report</button>
+        <button type="button" class="btn" id="download-report">Download report (.txt)</button>
+        <button type="button" class="btn" id="download-json">Download match (.json)</button>
+        <button type="button" class="btn" id="download-png">Download chart (.png)</button>
+      </div>
+      <p class="export-msg" id="export-msg" role="status"></p>
+      <details class="report-preview">
+        <summary>Preview the text report</summary>
+        <pre id="report-text"></pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================================================ SETUP -->
+  <section class="view view-setup" id="view-setup" aria-labelledby="setup-h" hidden>
+    <form class="panel setup" id="setup-form" novalidate>
+      <h1 id="setup-h">New match</h1>
+      <p class="note">Shirt numbers, one per line or separated by commas. A name after the number is optional. The first six listed start on court in serving order: the first one serves first.</p>
+
+      <fieldset class="team-fields team-home">
+        <legend>Home side</legend>
+        <label for="home-name">Team name</label>
+        <input id="home-name" name="homeName" autocomplete="off" maxlength="24" placeholder="Us">
+        <label for="home-roster">Players</label>
+        <textarea id="home-roster" name="homeRoster" rows="5" spellcheck="false" aria-describedby="home-roster-err" placeholder="4 Okafor&#10;7 Lindqvist&#10;9"></textarea>
+        <p class="field-err" id="home-roster-err"></p>
+      </fieldset>
+
+      <fieldset class="team-fields team-away">
+        <legend>Away side</legend>
+        <label for="away-name">Team name</label>
+        <input id="away-name" name="awayName" autocomplete="off" maxlength="24" placeholder="Opponent">
+        <label for="away-roster">Players</label>
+        <textarea id="away-roster" name="awayRoster" rows="5" spellcheck="false" aria-describedby="away-roster-err" placeholder="1, 3, 6, 8, 10, 13"></textarea>
+        <p class="field-err" id="away-roster-err"></p>
+      </fieldset>
+
+      <fieldset class="choice">
+        <legend>Format</legend>
+        <label><input type="radio" name="bestOf" value="3" checked> Best of 3</label>
+        <label><input type="radio" name="bestOf" value="5"> Best of 5</label>
+      </fieldset>
+
+      <fieldset class="choice">
+        <legend>First serve</legend>
+        <label><input type="radio" name="firstServe" value="home" checked> <span id="fs-home">Home side</span></label>
+        <label><input type="radio" name="firstServe" value="away"> <span id="fs-away">Away side</span></label>
+      </fieldset>
+
+      <label class="check"><input type="checkbox" id="pref-buzz" checked> Buzz the phone on each point, where supported</label>
+
+      <p class="field-err" id="setup-err" role="alert"></p>
+      <div class="setup-actions">
+        <button type="submit" class="btn btn-go">Start match</button>
+        <button type="button" class="btn" id="load-sample">Load the sample match</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<!-- ============================================================ DIALOGS -->
+<dialog class="sheet" id="picker" aria-labelledby="picker-h">
+  <form method="dialog" class="sheet-body">
+    <h2 class="sheet-h" id="picker-h">Point</h2>
+    <p class="sheet-sub" id="picker-sub"></p>
+    <div class="pick-step" id="pick-how">
+      <h3 class="pick-group" id="grp-earned">Won it</h3>
+      <div class="pick-grid" id="how-earned" role="group" aria-labelledby="grp-earned"></div>
+      <h3 class="pick-group" id="grp-error">Their error</h3>
+      <div class="pick-grid" id="how-error" role="group" aria-labelledby="grp-error"></div>
+      <div class="pick-foot">
+        <button type="button" class="pick pick-wide" id="pick-skip">Point only</button>
+        <button type="button" class="pick pick-undo" id="pick-undo">Wrong side: undo</button>
+      </div>
+    </div>
+    <div class="pick-step" id="pick-who" hidden>
+      <h3 class="pick-group" id="grp-who">Who?</h3>
+      <div class="pick-grid pick-numbers" id="who-court" role="group" aria-labelledby="grp-who"></div>
+      <h3 class="pick-group" id="grp-bench" hidden>Bench</h3>
+      <div class="pick-grid pick-numbers" id="who-bench" role="group" aria-labelledby="grp-bench"></div>
+      <div class="pick-foot">
+        <button type="button" class="pick pick-wide" id="pick-unknown">Not sure</button>
+        <button type="button" class="pick" id="pick-back">Back</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="subs" aria-labelledby="subs-h">
+  <form method="dialog" class="sheet-body">
+    <h2 class="sheet-h" id="subs-h">Substitution</h2>
+    <div class="seg" role="group" aria-label="Team">
+      <button type="button" class="pick" id="subs-team-home" aria-pressed="true">Home</button>
+      <button type="button" class="pick" id="subs-team-away" aria-pressed="false">Away</button>
+    </div>
+    <h3 class="pick-group" id="subs-out-h">Coming off</h3>
+    <div class="pick-grid pick-numbers" id="subs-out" role="group" aria-labelledby="subs-out-h"></div>
+    <h3 class="pick-group" id="subs-in-h">Going on</h3>
+    <div class="pick-grid pick-numbers" id="subs-in" role="group" aria-labelledby="subs-in-h"></div>
+    <p class="field-err" id="subs-msg"></p>
+    <div class="pick-foot">
+      <button type="button" class="pick pick-wide" id="subs-confirm" disabled>Make the change</button>
+      <button type="submit" class="pick" value="cancel">Close</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="sheet sheet-confirm" id="confirm" aria-labelledby="confirm-h" aria-describedby="confirm-text">
+  <form method="dialog" class="sheet-body">
+    <h2 class="sheet-h" id="confirm-h">Replace this match?</h2>
+    <p id="confirm-text"></p>
+    <div class="pick-foot">
+      <button type="submit" class="pick pick-danger" value="yes" id="confirm-yes">Replace it</button>
+      <button type="submit" class="pick" value="no" autofocus>Keep it</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
